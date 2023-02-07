@@ -25,6 +25,7 @@ let maxRecents=3
 let warningSpan=document.querySelector('#warning')
 let warningMessage="only 5 words allowed"
 
+// let updateTimer=setInterval(updateRecentPosts,1000)
 
 function checkIfReturn(event){
     if(event.key === "Enter" || event.which===13){
@@ -94,14 +95,17 @@ function updateRecentPosts(){
         let li=document.createElement('li')
         let now=Date.now()
         let ellapsed=new Date(now-post.time)
-        let ellapsedMins=ellapsed.getMinutes()
+        // let ellapsedMins=ellapsed.getMinutes()
+        let ellapsedSecs=ellapsed.getSeconds()
+        let ellapsedMins=Math.floor(ellapsedSecs/60)
+        ellapsedSecs=String(ellapsedSecs%60).padStart(2, '0');
         let button=document.createElement('button')
         button.textContent='like'
         button.setAttribute('data-post-id',post.postID.toString())
         button.addEventListener('click',processLike)
         let liContent=document.createElement('div')
         let liText=document.createElement('p')
-        liText.textContent=`${post.post.join('-')} (user ${post.userID}) [${ellapsedMins} mins ago] [likes:${post.likes}]`
+        liText.textContent=`${post.post.join(' ')} (user ${post.userID}) [${ellapsedMins}:${ellapsedSecs} ago (m:s)] [likes:${post.likes}]`
         li.appendChild(liText)
         li.appendChild(button)
         recentPostList.appendChild(li)
