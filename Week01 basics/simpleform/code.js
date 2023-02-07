@@ -22,6 +22,8 @@ let currentWords=[]
 let recentPosts=[]
 let nextPostID=0
 let maxRecents=3
+let warningSpan=document.querySelector('#warning')
+let warningMessage="only 5 words allowed"
 
 
 function checkIfReturn(event){
@@ -38,11 +40,13 @@ function checkWords(event){
     let inputText=event.target.value
     let inputWords=inputText.split(' ')
     if(inputWords.length>maxWords){
+        warningSpan.textContent=warningMessage
         console.log("too many words: maximum 5!")
         wordsNow=inputWords.slice(0,5)
         // console.log(wordsNow)
         words.value=wordsNow.join(' ')
     } else {
+        warningSpan.textContent=""
         wordsNow=[...inputWords]
     }
     console.log(wordsNow)
