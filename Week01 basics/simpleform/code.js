@@ -20,6 +20,7 @@ let maxWords=5
 let currentWords=[]
 
 let recentPosts=[]
+let nextPostID=0
 let maxRecents=3
 
 
@@ -53,8 +54,10 @@ function postWords(){
         console.log('no words to post')
     } else {
         let myPost={
+            postID: nextPostID++,
             userID: user.userID,
             post: [...currentWords],
+            likes: 0,
             time: Date.now()
         }
         // console.log(myPost)
@@ -85,7 +88,31 @@ function updateRecentPosts(){
     recentPostList.innerHTML=''
     recentPosts.forEach(function(post){
         let li=document.createElement('li')
-        li.textContent=`${post.post.join('-')} (user ${post.userID})`
+        let now=Date.now()
+        let ellapsed=new Date(now-post.time)
+        let ellapsedMins=ellapsed.getMinutes()
+        let button=document.createElement('button')
+        button.textContent='like'
+        button.setAttribute('data-post-id',post.postID.toString())
+        button.addEventListener('click',processLike)
+        let liContent=document.createElement('div')
+        let liText=document.createElement('p')
+        liText.textContent=`${post.post.join('-')} (user ${post.userID}) [${ellapsedMins} mins ago] [likes:${post.likes}]`
+        li.appendChild(liText)
+        li.appendChild(button)
         recentPostList.appendChild(li)
     })
+}
+
+function processLike(event){
+    let likedPostId=event.target.getAttribute("data-post-id");
+    console.log('you liked '+likedPostId)
+    let matchedPost=recentPosts.find(post=>post.postID==likedPostId)
+    if(matchedPost){ //check that it has found a match, if it did not this will be undefined
+        matchedPost.likes++
+        updateRecentPosts()
+    } else {
+        //no matched post
+    }
+
 }
