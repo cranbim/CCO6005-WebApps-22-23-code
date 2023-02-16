@@ -1,32 +1,44 @@
 console.log("Simple Posting App")
+
+//Code to retrieve 'user' param from the URL if present
 const queryString = window.location.search;
-// console.log(queryString);
 const urlParams = new URLSearchParams(queryString);
 const userParam = urlParams.get('user')
+
+//A dummy data structure to store data about the user
 const user={
     userID: userParam,
     someOtherStuff: null
 }
 console.log(user);
 
+//get a handle and add event listeners to the word input form
 let words=document.querySelector('#words')
 words.addEventListener('input',checkWords)
 words.addEventListener('keypress',checkIfReturn)
 
+//get a handle and add event listeners to the 'post' button
 let postButton=document.querySelector('#postwords')
 postButton.addEventListener('click',postWords)
 
+//basic post database (empty)
+let recentPosts=[]
+let maxRecents=3
+let nextPostID=0
+
+//variables for the 5 word limit feature
 let maxWords=5
 let currentWords=[]
-
-let recentPosts=[]
-let nextPostID=0
-let maxRecents=3
 let warningSpan=document.querySelector('#warning')
 let warningMessage="only 5 words allowed"
 
-// let updateTimer=setInterval(updateRecentPosts,1000)
+//get a handle on the recent-posts UL
+let recentPostList=document.querySelector("#recent-posts")
 
+//set a timer to constantly refresh the age of posts
+let updateTimer=setInterval(updateRecentPosts,1000)
+
+//handle enetr key on input form
 function checkIfReturn(event){
     if(event.key === "Enter" || event.which===13){
         postWords()
@@ -34,7 +46,7 @@ function checkIfReturn(event){
     }
 }
 
-
+//process input words top limit to 5 words
 function checkWords(event){
     currentWords=[]
     let wordsNow=[]
@@ -54,6 +66,7 @@ function checkWords(event){
     currentWords=wordsNow
 }
 
+//create dummy data structure for our post, and update recent posts list (database)
 function postWords(){
     if(currentWords.length==0){
         console.log('no words to post')
@@ -76,19 +89,21 @@ function postWords(){
     }
 }
 
+//helper function
 function clearWordInput(){
     words.value=''
     currentWords=[]
 }
 
+//dummy function to hnadle the posting to the backend if we had one
 function postTheseWords(wordsToPost){
     console.log("posting...")
     console.log(wordsToPost)
     console.log("... Posted!")
 }
 
-let recentPostList=document.querySelector("#recent-posts")
 
+//update the HTML for the recent posts list
 function updateRecentPosts(){
     recentPostList.innerHTML=''
     recentPosts.forEach(function(post){
@@ -97,8 +112,8 @@ function updateRecentPosts(){
         let ellapsed=new Date(now-post.time)
         // let ellapsedMins=ellapsed.getMinutes()
         let ellapsedSecs=ellapsed.getSeconds()
-        let ellapsedMins=Math.floor(ellapsedSecs/60)
-        ellapsedSecs=String(ellapsedSecs%60).padStart(2, '0');
+        let ellapsedMins=ellapsed.getMinutes()
+        ellapsedSecs=String(ellapsedSecs).padStart(2, '0');
         let button=document.createElement('button')
         button.textContent='like'
         button.setAttribute('data-post-id',post.postID.toString())
@@ -112,6 +127,7 @@ function updateRecentPosts(){
     })
 }
 
+//function to deal with a like button being pressed on a post
 function processLike(event){
     let likedPostId=event.target.getAttribute("data-post-id");
     console.log('you liked '+likedPostId)
