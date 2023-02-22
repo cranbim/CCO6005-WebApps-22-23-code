@@ -1,13 +1,13 @@
 const express=require('express')
 const app = express()
-app.listen(3000, ()=> console.log('nano listening at port 3000'))
-app.use(express.static('public'))
+app.listen(3000, ()=> console.log('listening at port 3000'))
+// app.use(express.static('public'))
 app.use(express.json())
+const path = require('path');
 
 const postList=[]
 let nextPostID=0
 defaultQtyPostsToSend=3
-
 
 app.post('/newpost', (request, response)=>{
     console.log(request.body)
