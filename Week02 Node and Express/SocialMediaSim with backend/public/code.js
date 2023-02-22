@@ -5,7 +5,6 @@ const user={
     userID: 0,
     someOtherStuff: null
 }
-console.log(user);
 
 //get a handle and add event listeners to the word input form
 let words=document.querySelector('#words')
@@ -14,8 +13,6 @@ words.addEventListener('keypress',checkIfReturn)
 let currentWords=''
 
 //temporary handles and event listeners for old post and fetch
-// let sendPost=document.querySelector('#send-post')
-// sendPost.addEventListener('click',postData)
 let getPosts=document.querySelector('#get-posts')
 getPosts.addEventListener('click',fetchData)
 
@@ -49,7 +46,7 @@ function checkWords(event){
     console.log(currentWords)
 }
 
-//create dummy data structure for our post, and update recent posts list (database)
+//create temporary data structure for our post, and update recent posts list (database)
 function postWords(){
     if(currentWords.length==0){
         console.log('no words to post')
@@ -61,7 +58,6 @@ function postWords(){
             likes: 0,
             time: Date.now()
         }
-        // console.log(myPost)
         postTheseWords(myPost)
         // recentPosts.unshift(myPost)
         // if(recentPosts.length>maxRecents){
@@ -78,7 +74,7 @@ function clearWordInput(){
     currentWords=''
 }
 
-//dummy function to hnadle the posting to the backend if we had one
+// function to handle the posting to the backend
 function postTheseWords(wordsToPost){
     console.log("posting...")
     console.log(wordsToPost)
@@ -137,29 +133,6 @@ function processLike(event){
         //no matched post
     }
 
-}
-
-
-function postData(){
-    let newPost={
-        postID: -1,
-        userID: user.userID,
-        post: "some post text",
-        likes: 0,
-        time: Date.now()
-    }
-    let options={
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newPost)
-    }
-    fetch('/newpost',options)
-    .then(response=>response.json())
-    .then(serverData=>handleDataFromServer(serverData))
-    // .then(serverData=>console.log(serverData))
-   
 }
 
 function fetchData(){
