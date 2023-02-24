@@ -1,0 +1,25 @@
+<h1>I am the home page</h1>
+<p>interesting!</p>
+
+<script>
+    function getData(){
+        fetch('/data')
+            .then(response=>response.json())
+            .then(fetchedData=>console.log(fetchedData))
+    }
+
+    function newRabbit(name='no bunny',colour='nothing'){
+        let rabbitData={name:name, colour:colour}
+        console.log(JSON.stringify(rabbitData))
+        let options={
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(rabbitData)
+            }
+        fetch('/new',options)
+            .then(response=>response.json())
+            .then(serverResponse=>console.log(serverResponse))
+    }
+</script>
