@@ -26,16 +26,19 @@ app.get('/app', checkLoggedIn, (request, response)=>{
 
 //controller for logout
 app.post('/logout', (request, response)=>{
+    console.log(users.getUsers())
     response.redirect('./loggedout.html')
 })
 
 //controller for login
 app.post('/login', (request, response)=>{
+    console.log(users.getUsers())
     response.redirect('/loggedin.html')
 })
 
 
 //controller for registering a new user
 app.post('/register', (request, response)=>{
+    console.log(users.getUsers())
     response.redirect('/registered.html')
 })
