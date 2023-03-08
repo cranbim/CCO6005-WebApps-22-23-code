@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Posted successfully</h2>
+    <nav>
+        <a href="login.html">Login</a>
+        <a href="logout.html">Logout</a>
+        <a href="register.html">Register</a>
+        <a href="app">Application</a>
+    </nav>
+    <div>
+        <ul id="recent-posts"></ul>
+    </div>
+    <a href="app">New Post</a>
+    <script>
+
+        let recentPosts=[]
+        //get a handle on the recent-posts UL
+        let recentPostList=document.querySelector("#recent-posts")
+        fetchData()
+
+        function fetchData(){
+            let numberToFetch=3
+            let getPostsParam=`/?qty=${numberToFetch}`
+            fetch('/getposts'+getPostsParam)
+                .then(response=>response.json())
+                .then(fetchedData=>handleDataFromServer(fetchedData))
+        }
+
+        function handleDataFromServer(data){
+            console.log('data received from server ...')
+            console.log(data)
+            recentPosts=data.posts
+            updateRecentPosts()
+        }
+
+        function updateRecentPosts(){
+            //empty the UL of recent posts so we can build it again
+            recentPostList.innerHTML=''
+            recentPosts.forEach(function(post){
+                // Create a new, empty li
+                let li=document.createElement('li')
+                //calculate ellaped mins and secs since post time
+                let now=Date.now()
+                let ellapsed=new Date(now-post.time)
+                let ellapsedSecs=ellapsed.getSeconds()
+                let ellapsedMins=ellapsed.getMinutes()
+                ellapsedSecs=String(ellapsedSecs).padStart(2, '0');
+                //build the recent post text and add it, with the button, as new li
+                let liText=document.createElement('p')
+                liText.textContent=`${post.message} (user ${post.user}) [${ellapsedMins}:${ellapsedSecs} ago (m:s)]`
+                li.appendChild(liText)
+                //add the li to the ul
+                recentPostList.appendChild(li)
+            })
+        }
+    </script>
+</body>
+</html>
