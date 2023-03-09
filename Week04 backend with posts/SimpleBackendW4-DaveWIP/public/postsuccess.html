@@ -52,13 +52,39 @@
                 let ellapsedSecs=ellapsed.getSeconds()
                 let ellapsedMins=ellapsed.getMinutes()
                 ellapsedSecs=String(ellapsedSecs).padStart(2, '0');
+                //create a 'like' button
+                let button=document.createElement('button')
+                button.textContent='like'
+                button.addEventListener('click',processLike)
+                //add a unique attribute for the like button so it knows which post it belongs to
+                button.setAttribute('data-post-id',post.postID.toString())
                 //build the recent post text and add it, with the button, as new li
                 let liText=document.createElement('p')
-                liText.textContent=`${post.message} (user ${post.user}) [${ellapsedMins}:${ellapsedSecs} ago (m:s)]`
+                liText.textContent=`${post.message} (user ${post.user}) [${ellapsedMins}:${ellapsedSecs} ago (m:s)] [likes:${post.likes}]`
                 li.appendChild(liText)
+                li.appendChild(button)
                 //add the li to the ul
                 recentPostList.appendChild(li)
             })
+        }
+
+        //function to deal with a like button being pressed on a post
+        function processLike(event){
+            let likedPostId=event.target.getAttribute("data-post-id");
+            console.log('you liked '+likedPostId)
+            let options={
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    likedPostID:likedPostId
+                })
+            }
+            fetch('/like',options)
+                .then(response=>response.json())
+                .then(serverData=>handleDataFromServer(serverData))
+            console.log(likedPostId+"... Liked!")
         }
     </script>
 </body>

@@ -118,3 +118,16 @@ app.get('/getposts', (request, response)=>{
         posts:posts.retrievePosts(qtyPosts)
     })
 })
+
+//controller for handling a post being liked
+app.post('/like', (request, response)=>{
+    //function to deal with a like button being pressed on a post
+    likedPostID=request.body.likedPostID
+    likedByUser=request.session.userid
+    posts.likePost(likedPostID, likedByUser)
+    console.log(likedByUser+" liked "+likedPostID)
+    let qtyPosts=3
+    response.json({
+        posts:posts.retrievePosts(qtyPosts)
+    })
+})
