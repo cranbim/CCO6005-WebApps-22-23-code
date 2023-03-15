@@ -1,14 +1,18 @@
 
 const posts=[]
 
-function addNewPost(userID, message){
+function addNewPost(userID, post){
     let myPost={
         postedBy: userID,
-        message: message,
+        message: post.message,
         likes: 0,
         time: Date.now()
     }
     posts.unshift(myPost)
 }
 
-module.exports={addNewPost}
+function getPosts(n){
+    return posts.slice(0,n)
+}
+
+module.exports={addNewPost, getPosts}

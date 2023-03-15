@@ -1,0 +1,31 @@
+.outer-div {
+    border-style: solid;
+    border-color: blue;
+    width: 50%;
+    /* height: 30px; */
+}
+
+.inner-div {
+    margin: 3px;
+    
+}
+
+.yellow-div {
+    background-color: yellow;
+    /* position: static; */
+}
+
+.red-div {
+    background-color: red;
+    position: absolute;
+    left: 20px;
+    z-index: -1;
+}
+
+p {
+    margin: 0;
+    padding: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    border-style: dotted;
+}

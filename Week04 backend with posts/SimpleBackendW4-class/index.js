@@ -90,6 +90,13 @@ app.post('/newpost',(request, response) =>{
     response.redirect('/postsuccessful.html')
 })
 
+app.get('/getposts',(request,response)=>{
+    //console.log(postData.getPosts(3))
+    response.json({
+        posts: postData.getPosts(3)
+    })
+})
+
 //controller for registering a new user
 app.post('/register', (request, response)=>{
     console.log(request.body)

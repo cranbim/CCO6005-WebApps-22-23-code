@@ -14,6 +14,38 @@
         <a href="register.html">Register</a>
         <a href="app">Application</a>
     </nav>
-    
+    <div>
+        <ul id="recent-posts"></ul>
+    </div>
+
+    <script>
+        let recentPosts=document.querySelector('#recent-posts')
+        
+        let recentPostData=[]
+
+        fetch('/getposts')
+            .then(response=>response.json())
+            .then(fetchedData=>{
+                recentPostData=fetchedData.posts
+                updateRecentPosts()
+            })
+        
+        function updateRecentPosts(){
+            //empty the UL of recent posts so we can build it again
+            recentPosts.innerHTML=''
+            recentPostData.forEach(function(post){
+                console.log(post)
+                // Create a new, empty li
+                let li=document.createElement('li')
+                //create a 'like' button
+                let liText=document.createElement('p')
+                liText.textContent=`${post.message} (by ${post.postedBy})`
+                li.appendChild(liText)
+                //add the li to the ul
+                recentPosts.appendChild(li)
+            })
+        }
+        
+    </script>
 </body>
 </html>
