@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express=require('express')
 const app = express()
 app.listen(3000, ()=> console.log('listening at port 3000'))
@@ -39,7 +41,11 @@ app.use(sessions({
 
 //load mongoose module and connect to MongoDB instance and database
 const mongoose = require('mongoose');
-mongoose.connect("mongodb+srv://CCO6005-00:black.D0g@cluster0.lpfnqqx.mongodb.net/DJWApp?retryWrites=true&w=majority")
+
+//changes
+//more changes
+mongoDBPassword=process.env.MYMONGODBPASSWORD
+mongoose.connect(`mongodb+srv://CCO6005-00:${mongoDBPassword}@cluster0.lpfnqqx.mongodb.net/DJWApp?retryWrites=true&w=majority`)
 
 //load our Post model
 const postData =require('./models/Post');

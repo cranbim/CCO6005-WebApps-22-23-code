@@ -14,7 +14,7 @@ const postSchema = new Schema({
     }]
 });
 
-const Post = model('Post', postSchema);
+const Post = model('MyPost', postSchema);
 
 
 function addNewPost(userID, post){

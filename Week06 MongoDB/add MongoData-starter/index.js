@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(sessions({
     secret: "a secret that only i know",
     saveUninitialized:true,
-    cookie: { maxAge: threeMins },
+    cookie: { maxAge: oneHour },
     resave: false 
 }));
 

@@ -44,7 +44,7 @@
                 button.textContent='like'
                 button.addEventListener('click',processLike)
                 //add a unique attribute for the like button so it knows which post it belongs to
-                // console.log(post._id.toString())
+                console.log(post._id.toString())
                 button.setAttribute('data-post-id',post._id.toString())
                 li.appendChild(liText)
                 li.appendChild(button)
