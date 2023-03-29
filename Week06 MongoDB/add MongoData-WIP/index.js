@@ -1,4 +1,6 @@
 require('dotenv').config();
+const mongoDBPassword=process.env.MYMONGODBPASSWORD
+const sessionSecret=process.env.MYSESSIONSECRET
 
 const express=require('express')
 const app = express()
@@ -14,8 +16,11 @@ app.use(express.urlencoded({extended: false}));
 
 const path = require('path');
 
-//importing our own node module
-const users=require('./users.js')
+//multer allows processing multipart forms with images
+const multer=require('multer');
+
+const upload = multer({ dest: './public/uploads/' })
+
 
 //consts to hold expiry times in ms
 const threeMins = 1000 * 60 * 3;
@@ -30,22 +35,19 @@ app.use(cookieParser());
 
 //load sessions middleware, with some config
 app.use(sessions({
-    secret: "a secret that only i know",
+    secret: sessionSecret,
     saveUninitialized:true,
-    cookie: { maxAge: threeMins },
+    cookie: { maxAge: oneHour },
     resave: false 
 }));
-
-//load our posts data module
-// const postData=require('./posts-data.js')
 
 //load mongoose module and connect to MongoDB instance and database
 const mongoose = require('mongoose');
 
-//changes
-//more changes
-mongoDBPassword=process.env.MYMONGODBPASSWORD
 mongoose.connect(`mongodb+srv://CCO6005-00:${mongoDBPassword}@cluster0.lpfnqqx.mongodb.net/DJWApp?retryWrites=true&w=majority`)
+
+//importing our own node module
+const users=require('./models/User')
 
 //load our Post model
 const postData =require('./models/Post');
@@ -64,46 +66,56 @@ function checkLoggedIn(request, response, nextAction){
 
 //controller for the main app view, depends on user logged in state
 app.get('/app', checkLoggedIn, (request, response)=>{
-    response.redirect('./application.html')
+    // response.redirect('./application.html')
+    response.redirect('./viewposts.html')
 })
 
 
 //controller for logout
-app.post('/logout', (request, response)=>{
+app.post('/logout', async (request, response)=>{
     
-    users.setLoggedIn(request.session.userid,false)
+    await users.setLoggedIn(request.session.userid,false)
     request.session.destroy()
-    console.log(users.getUsers())
+    await console.log(users.getUsers())
     response.redirect('./loggedout.html')
 })
 
 //controller for login
-app.post('/login', (request, response)=>{
+app.post('/login', async (request, response)=>{
     console.log(request.body)
     let userData=request.body
     console.log(userData)
-    if(users.findUser(userData.username)){
+    
+    if(await users.findUser(userData.username)){
         console.log('user found')
-        if(users.checkPassword(userData.username, userData.password)){
+        if(await users.checkPassword(userData.username, userData.password)){
             console.log('password matches')
             request.session.userid=userData.username
-            users.setLoggedIn(userData.username, true)
+            await users.setLoggedIn(userData.username, true)
             response.redirect('/loggedin.html')
         } else {
             console.log('password wrong')
             response.redirect('/loginfailed.html')
         }
+    } else {
+        console.log('no such user')
+        response.redirect('/loginfailed.html')
     }
-    console.log(users.getUsers())
 })
 
 
-app.post('/newpost',(request, response) =>{
-    console.log(request.body)
-    console.log(request.session.userid)
-    postData.addNewPost(request.session.userid, request.body)
-    response.redirect('/postsuccessful.html')
+app.post('/newpost', upload.single('myImage'), async (request, response) =>{
+    // console.log(request.file)
+    let filename=null
+    if(request.file && request.file.filename){ //check that a file was passes with a valid name
+        filename='uploads/'+request.file.filename
+    }
+    await postData.addNewPost(request.session.userid, request.body, filename)
+    response.redirect('/viewposts.html')
 })
+
+
+
 
 // async/await version of /getposts controller using Mongo
 app.get('/getposts',async (request, response)=>{
@@ -112,15 +124,6 @@ app.get('/getposts',async (request, response)=>{
     )
 })
 
-// promise version of /getposts controller using Mongo
-// app.get('/getposts',async (request, response)=>{
-//     postData.getPosts(5)
-//         .then(data=>{
-//             response.json(
-//                 {posts: data}
-//             )
-//         })  
-// })
 
 //controller for handling a post being liked
 app.post('/like', async (request, response)=>{
@@ -134,12 +137,29 @@ app.post('/like', async (request, response)=>{
     )
 })
 
+app.post('/comment', async (request, response)=>{
+    //function to deal with a like button being pressed on a post
+    let commentedPostID=request.body.postid
+    let comment=request.body.message
+    let commentByUser=request.session.userid
+    await postData.commentOnPost(commentedPostID, commentByUser, comment)
+    // response.json({post: await postData.getPost(commentedPostID)})
+    response.redirect('/viewposts.html')
+})
+
+app.post('/getonepost', async (request, response) =>{
+    // console.log(request.file)
+    let postid=request.body.post
+    console.log(request.body)
+    response.json({post: await postData.getPost(request.body.post)})
+})
+
 //controller for registering a new user
-app.post('/register', (request, response)=>{
+app.post('/register', async (request, response)=>{
     console.log(request.body)
     let userData=request.body
     // console.log(userData.username)
-    if(users.findUser(userData.username)){
+    if(await users.findUser(userData.username)){
         console.log('user exists')
         response.json({
             status: 'failed',
