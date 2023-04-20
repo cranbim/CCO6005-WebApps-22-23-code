@@ -44,7 +44,7 @@ app.use(sessions({
 //load mongoose module and connect to MongoDB instance and database
 const mongoose = require('mongoose');
 
-mongoose.connect(`mongodb+srv://CCO6005-00:${mongoDBPassword}@cluster0.lpfnqqx.mongodb.net/DJWApp?retryWrites=true&w=majority`)
+mongoose.connect(`mongodb+srv://CCO6005-00:${mongoDBPassword}@cluster0.lpfnqqx.mongodb.net/DavesApp?retryWrites=true&w=majority`)
 
 //importing our own node module
 const users=require('./models/User')
@@ -105,7 +105,7 @@ app.post('/login', async (request, response)=>{
 
 
 app.post('/newpost', upload.single('myImage'), async (request, response) =>{
-    // console.log(request.file)
+    console.log(request.file)
     let filename=null
     if(request.file && request.file.filename){ //check that a file was passes with a valid name
         filename='uploads/'+request.file.filename

@@ -1,7 +1,7 @@
 
     const users=[
         {username:'user1', password:'123', loggedin:false},
-        {username:'user2', password:'123', loggedin:false}
+        // {username:'user2', password:'123', loggedin:false}
     ]
 
     function newUser(username, password){
