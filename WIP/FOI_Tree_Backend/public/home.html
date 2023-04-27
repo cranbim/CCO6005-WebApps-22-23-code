@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>TreeData Write test</h1>
+    <form action="/treedata" method="POST">
+        <label>TreeData</label><br>
+        <label for="treename">Tree Name</label>
+        <input type="text" id="treename" name="treename"><br>
+        <label for="treesize">Tree Size (1-5)</label>
+        <input type="number" id="treesize" name="treesize" min="1" max="5"><br>
+        <label for="treecolour">Tree Colour (0-9)</label>
+        <input type="number" id="treecolour" name="treecolour" min="0" max="9"><br>
+        <input type="submit" value="Post">
+    </form>
+    
+    
+</body>
+</html>
