@@ -91,6 +91,6 @@ function getPostsByThoseIFollow(me){
         })
     })
     return filteredPosts
-}
+
 
 module.exports={users,posts,getPostsByThoseIFollow}
