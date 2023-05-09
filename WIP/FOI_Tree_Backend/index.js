@@ -52,8 +52,8 @@ server.post("/treedata", async (request, response) => {
     console.log(request.body)
     await writeSomething({
         treeName: request.body.treename,
-        colour: request.body.treesize,
-        size: request.body.treecolour
+        size: request.body.treesize,
+        colour: request.body.treecolour
     })
     response.send("Data received, thanks")
     // response.redirect("trees.html")
