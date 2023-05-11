@@ -24,7 +24,7 @@ const Simple = mongoose.model('Simple', simpleSchema);
 //     message: "hello"
 // });
    
-// Simple.create(test);
+// Simple.create(test); 
 
 app.post("/testdata", async (request, response) => {
     console.log(request.body)

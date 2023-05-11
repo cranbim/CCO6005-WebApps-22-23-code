@@ -4,13 +4,16 @@ public class TreeDataUI : MonoBehaviour
 {
 
     private TreeData myTreeData;
+    private string dataURL="http://localhost:3000/treedata";
+
 
     void Start()
     {
         myTreeData = new TreeData();
-        myTreeData.treeFamilyName = "Dave's Tree";
-        myTreeData.treeSize = 3;
-        myTreeData.treeColour = 0;
+        myTreeData.treeName = "Dave's Tree";
+        myTreeData.treeShape = 3;
+        myTreeData.treeColour = 1;
+        SubmitTreeData();
     }
 
     void SubmitTreeData(){
@@ -19,12 +22,12 @@ public class TreeDataUI : MonoBehaviour
         }));
     }
 
-    IEnumerator Upload(string profile, System.Action<bool> callback = null)
+    IEnumerator Upload(string stringifiedTreeData, System.Action<bool> callback = null)
     {
         using (UnityWebRequest request = new UnityWebRequest("http://localhost:3000/treedata", "POST"))
         {
             request.SetRequestHeader("Content-Type", "application/json");
-            byte[] bodyRaw = Encoding.UTF8.GetBytes(profile);
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(stringifiedTreeData);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
             yield return request.SendWebRequest();
